@@ -31,6 +31,7 @@ services:
       - N8N_RUNNERS_ENABLED=true
       - WEBHOOK_URL=https://k2vm-136.mde.epf.fr/   # replace with your VM's URL
       - N8N_PROXY_HOPS=1
+      - N8N_SECURE_COOKIE=false   # allow login over plain HTTP (lab only)
     volumes:
       - n8n_data:/home/node/.n8n
     restart: unless-stopped
