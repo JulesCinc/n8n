@@ -1,9 +1,14 @@
+# docker-compose complet de la VM (Ollama + OpenWebUI + n8n + Qdrant).
+# Clé API Qdrant : définir QDRANT_API_KEY dans un fichier .env à côté de ce fichier
+#   (ex. QDRANT_API_KEY=$(openssl rand -hex 32)).
+# Dans n8n : credential "Qdrant API" -> URL http://qdrant:6333 + cette clé ;
+#            credential "Ollama"     -> URL http://ollama:11434.
 services:
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
     environment:
-         - OLLAMA_DEBUG=2
+      - OLLAMA_DEBUG=2
     volumes:
       - ollama:/root/.ollama
     restart: unless-stopped
@@ -29,11 +34,26 @@ services:
     environment:
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_RUNNERS_ENABLED=true
-      - WEBHOOK_URL=https://k2vm-136.mde.epf.fr/   # replace with your VM's URL
+      - WEBHOOK_URL=https://k2vm-136.mde.epf.fr/
       - N8N_PROXY_HOPS=1
-      - N8N_SECURE_COOKIE=false   # allow login over plain HTTP (lab only)
+      - N8N_SECURE_COOKIE=false   # login en HTTP (labo uniquement)
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./vidal_out:/data/vidal:ro   # JSONL Vidal lisible par le workflow d'indexation
+    depends_on:
+      - ollama
+      - qdrant
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    ports:
+      - "127.0.0.1:6333:6333"   # REST + dashboard, joignable depuis la VM seulement (tunnel SSH)
+    environment:
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
+    volumes:
+      - qdrant_data:/qdrant/storage
     restart: unless-stopped
 
 volumes:
@@ -41,3 +61,5 @@ volumes:
   open-webui:
   n8n_data:
     name: n8n_data
+  qdrant_data:
+    name: qdrant_data
