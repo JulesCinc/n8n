@@ -34,7 +34,7 @@ All services share the Compose network, so they can reach each other by service 
 
 ### Setup
 
-Create a `.env` file next to `docker-compose.yml` with the Qdrant API key (do not commit it):
+A `.env` file is **required** in the compose working directory (the folder containing `docker-compose.yml`, where you run `docker compose`). It holds the Qdrant API key; without it, Compose warns that `QDRANT_API_KEY` is not set and Qdrant gets an empty API key. Do not commit it.
 
 ```bash
 echo "QDRANT_API_KEY=$(openssl rand -hex 32)" > .env
