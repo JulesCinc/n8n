@@ -34,7 +34,7 @@ services:
     environment:
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_RUNNERS_ENABLED=true
-      - WEBHOOK_URL=https://k2vm-136.mde.epf.fr/
+      - WEBHOOK_URL=http://10.3.54.88:5678/
       - N8N_PROXY_HOPS=1
       - N8N_SECURE_COOKIE=false   # login en HTTP (labo uniquement)
     volumes:
