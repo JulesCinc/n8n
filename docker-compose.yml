@@ -59,9 +59,13 @@ services:
 volumes:
   ollama:
     name: chatbot_ollama
+    external: true
   open-webui:
     name: chatbot_open-webui
+    external:  true
   n8n_data:
     name: n8n_data
+    external: true
   qdrant_data:
     name: qdrant_data
+    external: true
